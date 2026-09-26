@@ -13,7 +13,7 @@ try {
 function hasThree() { return THREE !== null; }
 
 /* ===================================================
-   1. SAFE LOADER
+   1. LOADER
 =================================================== */
 (function loader(){
   const bar = document.getElementById('loader-bar-fill');
@@ -155,7 +155,6 @@ function openModal(drink) {
   const img = document.getElementById('modal-img');
   img.src = drink.img;
   img.alt = drink.name;
-
   modalOverlay.classList.add('open');
   modalBox.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -169,26 +168,24 @@ document.getElementById('modal-close').addEventListener('click', closeModal);
 modalOverlay.addEventListener('click', closeModal);
 
 /* ===================================================
-   6. ROAST LAB — Color-changing coffee inside CSS cup
+   6. ROAST LAB
 =================================================== */
 const ROASTS = [
   { id:'light', name:'Light', flavors:['Bright','Floral','Citrus'],
     coffeeHi:'#d4a574', coffeeMid:'#a8734c', coffeeLo:'#6b3d20', shine:'0.45',
     desc:'Preserves origin character — bright, floral, and delicate. Roasted just past first crack.' },
   { id:'medium', name:'Medium', flavors:['Balanced','Sweet','Nutty'],
-    coffeeHi:'#c48b4f', coffeeMid:'#9e6338', coffeeLo:'#8d5430', shine:'0.35',
+    coffeeHi:'#c48b4f', coffeeMid:'#9e6338', coffeeLo:'#6b3d20', shine:'0.35',
     desc:'The balance point. Caramelization develops sweetness while origin notes remain present.' },
   { id:'med-dark', name:'Medium-Dark', flavors:['Chocolate','Toasted','Full'],
-    coffeeHi:'#b8752e', coffeeMid:'#88512a', coffeeLo:'#804928', shine:'0.25',
+    coffeeHi:'#a86b2a', coffeeMid:'#5a3620', coffeeLo:'#2a1810', shine:'0.25',
     desc:'Deeper body, richer sugars. Notes of dark chocolate and toasted nuts emerge.' },
   { id:'dark', name:'Dark', flavors:['Bold','Smoky','Intense'],
-    coffeeHi:'#aa6419', coffeeMid:'#7a431b', coffeeLo:'#6d3816', shine:'0.15',
+    coffeeHi:'#6b3d20', coffeeMid:'#3a1f10', coffeeLo:'#1a0f08', shine:'0.15',
     desc:'Bold and smoky. Oils reach the surface, delivering intensity and a long, resonant finish.' }
 ];
-
 const rl = document.getElementById('roast-levels');
 let activeRoast = 0;
-
 ROASTS.forEach((r, i) => {
   const b = document.createElement('button');
   b.className = 'roast-pill' + (i === 0 ? ' active' : '');
@@ -196,7 +193,6 @@ ROASTS.forEach((r, i) => {
   b.onclick = () => { activeRoast = i; updateRoast(); };
   rl.appendChild(b);
 });
-
 function updateRoast() {
   const r = ROASTS[activeRoast];
   document.querySelectorAll('#roast-levels .roast-pill').forEach((b, i) => {
@@ -221,42 +217,62 @@ function updateRoast() {
 updateRoast();
 
 /* ===================================================
-   7. BREW GUIDE
+   7. SIGNATURE SERIES
 =================================================== */
-const BREWS = [
-  { id:'espresso', name:'Espresso', desc:'Pressure-extracted concentrate.',
-    grind:'Fine', ratio:'1:2', time:'25–30s', profile:'Intense · Syrupy · Concentrated' },
-  { id:'pourover', name:'Pour Over', desc:'Slow, controlled extraction.',
-    grind:'Medium-Fine', ratio:'1:16', time:'2:30–3:00', profile:'Clean · Bright · Nuanced' },
-  { id:'french', name:'French Press', desc:'Full-immersion, rich body.',
-    grind:'Coarse', ratio:'1:14', time:'4:00', profile:'Rich · Oily · Full-bodied' },
-  { id:'cold', name:'Cold Brew', desc:'Cold, slow extraction.',
-    grind:'Coarse', ratio:'1:8', time:'12–16h', profile:'Smooth · Sweet · Low-acid' }
+const SIGNATURES = [
+  { name:'Signature <em>Espresso</em>', eyebrow:'Signature Drink',
+    notes:'Rich · Bold · Chocolate',
+    flavors:['Cocoa','Caramel','Molasses'],
+    desc:'Our flagship espresso — pulled hot, dense, and full-bodied. A shot built for the daily ritual.',
+    cupHi:'#a8734c', cupMid:'#4a2c1a', cupLo:'#1a0f08' },
+  { name:'House <em>Latte</em>', eyebrow:'House Favorite',
+    notes:'Smooth · Velvet · Nutty',
+    flavors:['Steamed Milk','Almond','Brown Sugar'],
+    desc:'Silky steamed milk poured over a balanced double shot. The kind of cup you order again tomorrow.',
+    cupHi:'#d4a574', cupMid:'#8b5a3c', cupLo:'#3a1f10' },
+  { name:'Ethiopian <em>Pour Over</em>', eyebrow:'Single Origin',
+    notes:'Floral · Citrus · Bright',
+    flavors:['Jasmine','Bergamot','Stone Fruit'],
+    desc:'Hand-poured Yirgacheffe. Delicate, tea-like, and luminous. Best enjoyed without milk.',
+    cupHi:'#f0d9b5', cupMid:'#b89870', cupLo:'#6b3d20' },
+  { name:'Midnight <em>Mocha</em>', eyebrow:'Dark Roast',
+    notes:'Deep · Smoky · Intense',
+    flavors:['Dark Chocolate','Espresso','Cream'],
+    desc:'Our darkest roast married with single-origin cocoa. Rich, warm, and unapologetically grown-up.',
+    cupHi:'#6b3d20', cupMid:'#2a1810', cupLo:'#0a0503' }
 ];
-const bg = document.getElementById('brew-grid');
-let activeBrew = 0;
-BREWS.forEach((b, i) => {
+const sigList = document.getElementById('sig-list');
+let activeSig = 0;
+SIGNATURES.forEach((s, i) => {
   const el = document.createElement('button');
-  el.className = 'brew-card' + (i === 0 ? ' active' : '');
+  el.className = 'sig-drink' + (i === 0 ? ' active' : '');
   el.innerHTML = `
-    <div class="num">0${i+1}</div>
-    <h5>${b.name}</h5>
-    <div class="desc">${b.desc}</div>
+    <span class="sig-drink-name">${s.name.replace(/<[^>]*>/g,'')}</span>
+    <span class="sig-drink-meta">${s.flavors[0]}</span>
   `;
-  el.onclick = () => { activeBrew = i; updateBrew(); };
-  bg.appendChild(el);
+  el.onclick = () => { activeSig = i; updateSignature(); };
+  sigList.appendChild(el);
 });
-function updateBrew() {
-  document.querySelectorAll('#brew-grid .brew-card').forEach((c, i) => c.classList.toggle('active', i === activeBrew));
-  const b = BREWS[activeBrew];
-  document.getElementById('brew-detail').innerHTML = `
-    <div class="item"><div class="k">Grind</div><div class="v">${b.grind}</div></div>
-    <div class="item"><div class="k">Ratio</div><div class="v">${b.ratio}</div></div>
-    <div class="item"><div class="k">Time</div><div class="v">${b.time}</div></div>
-    <div class="item"><div class="k">Profile</div><div class="v" style="font-size:16px">${b.profile}</div></div>
-  `;
+function updateSignature() {
+  const s = SIGNATURES[activeSig];
+  document.querySelectorAll('.sig-drink').forEach((d, i) => d.classList.toggle('active', i === activeSig));
+  document.getElementById('sig-eyebrow').textContent = s.eyebrow;
+  document.getElementById('sig-title').innerHTML = s.name;
+  document.getElementById('sig-desc').textContent = s.desc;
+  const notesEl = document.getElementById('sig-notes');
+  notesEl.innerHTML = '';
+  s.flavors.forEach(f => {
+    const el = document.createElement('span');
+    el.className = 'sig-note';
+    el.textContent = f;
+    notesEl.appendChild(el);
+  });
+  const liquid = document.getElementById('sc-liquid');
+  liquid.style.setProperty('--sc-hi', s.cupHi);
+  liquid.style.setProperty('--sc-mid', s.cupMid);
+  liquid.style.setProperty('--sc-lo', s.cupLo);
 }
-updateBrew();
+updateSignature();
 
 /* ===================================================
    8. CONTACT + NEWSLETTER
@@ -335,7 +351,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 
 /* ===================================================
-   11. THREE.JS HERO — 3D Coffee Cup + floating beans
+   11. HERO CUP — Small, on right, coffee clearly visible,
+       auto-rotates, click changes roast
 =================================================== */
 (function heroScene(){
   if (!hasThree()) return;
@@ -343,47 +360,51 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   if (!canvas) return;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(38, innerWidth/innerHeight, 0.1, 100);
-  camera.position.set(0, 0.6, 5.5);
-  camera.lookAt(0, 0, 0);
+  const w = canvas.clientWidth || 380;
+  const h = canvas.clientHeight || 380;
+  const camera = new THREE.PerspectiveCamera(38, w/h, 0.1, 100);
+  camera.position.set(0, 1.2, 4.2);
+  camera.lookAt(0, -0.2, 0);
 
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
-  renderer.setSize(innerWidth, innerHeight);
+  renderer.setSize(w, h, false);
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.2;
 
-  scene.add(new THREE.AmbientLight(0xa89480, 0.55));
-  const key = new THREE.DirectionalLight(0xf5e6cc, 1.5);
+  scene.add(new THREE.AmbientLight(0xa89480, 0.6));
+  const key = new THREE.DirectionalLight(0xf5e6cc, 1.6);
   key.position.set(4, 6, 5); scene.add(key);
   const warm = new THREE.PointLight(0xd4a574, 1.8, 14);
   warm.position.set(-4, 1, 3); scene.add(warm);
-  const rim = new THREE.PointLight(0xc99a6b, 1.3, 12);
+  const rim = new THREE.PointLight(0xc99a6b, 1.4, 12);
   rim.position.set(3, -1, -2); scene.add(rim);
 
-  /* 3D CUP */
+  /* CUP GROUP */
   const cup = new THREE.Group();
-  cup.position.set(0, 0, 0);
+  cup.position.y = -0.15;
   scene.add(cup);
 
+  /* Saucer */
   const saucer = new THREE.Mesh(
-    new THREE.CylinderGeometry(1.35, 1.4, 0.07, 64),
+    new THREE.CylinderGeometry(1.4, 1.45, 0.07, 64),
     new THREE.MeshStandardMaterial({ color: 0xf5e6cc, roughness: 0.35, metalness: 0.06 })
   );
   saucer.position.y = -1.05;
   cup.add(saucer);
 
   const saucerRim = new THREE.Mesh(
-    new THREE.TorusGeometry(1.35, 0.025, 16, 80),
+    new THREE.TorusGeometry(1.4, 0.025, 16, 80),
     new THREE.MeshStandardMaterial({ color: 0xd4a574, metalness: 0.75, roughness: 0.22 })
   );
   saucerRim.position.y = -1.02;
   saucerRim.rotation.x = Math.PI/2;
   cup.add(saucerRim);
 
+  /* Cup body (open top so we can see coffee inside) */
   const body = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.95, 0.7, 1.55, 64, 1, true),
+    new THREE.CylinderGeometry(0.98, 0.72, 1.6, 64, 1, true),
     new THREE.MeshStandardMaterial({
       color: 0xf5e6cc, roughness: 0.3, metalness: 0.08,
       side: THREE.DoubleSide
@@ -393,416 +414,566 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   cup.add(body);
 
   const bottom = new THREE.Mesh(
-    new THREE.CircleGeometry(0.7, 48),
+    new THREE.CircleGeometry(0.72, 48),
     new THREE.MeshStandardMaterial({ color: 0xe8d5b8, roughness: 0.5, side: THREE.DoubleSide })
   );
   bottom.position.y = -0.92;
   bottom.rotation.x = -Math.PI/2;
   cup.add(bottom);
 
-  const rimTorus = new THREE.Mesh(
-    new THREE.TorusGeometry(0.95, 0.035, 16, 80),
-    new THREE.MeshStandardMaterial({ color: 0xfdf6e8, roughness: 0.3, metalness: 0.08 })
-  );
-  rimTorus.position.y = 0.625;
-  rimTorus.rotation.x = Math.PI/2;
-  cup.add(rimTorus);
-
+  /* Coffee INSIDE — slightly lower, so top-down view shows it clearly */
+  const coffeeMat = new THREE.MeshStandardMaterial({
+    color: 0x4a2c1a, roughness: 0.18, metalness: 0.22,
+    emissive: 0x1a0f08, emissiveIntensity: 0.15
+  });
   const coffee = new THREE.Mesh(
-    new THREE.CircleGeometry(0.9, 64),
-    new THREE.MeshStandardMaterial({
-      color: 0x3a1f10, roughness: 0.14, metalness: 0.25,
-      emissive: 0x1a0f08, emissiveIntensity: 0.15
-    })
+    new THREE.CircleGeometry(0.93, 64),
+    coffeeMat
   );
-  coffee.position.y = 0.58;
+  coffee.position.y = 0.4;
   coffee.rotation.x = -Math.PI/2;
   cup.add(coffee);
 
+  /* Crema ring */
+  const cremaMat = new THREE.MeshStandardMaterial({
+    color: 0xc99a6b, roughness: 0.4, metalness: 0.15,
+    emissive: 0xc99a6b, emissiveIntensity: 0.25
+  });
   const crema = new THREE.Mesh(
-    new THREE.TorusGeometry(0.86, 0.02, 12, 80),
-    new THREE.MeshStandardMaterial({
-      color: 0xc99a6b, roughness: 0.4, metalness: 0.15,
-      emissive: 0xc99a6b, emissiveIntensity: 0.2
-    })
+    new THREE.TorusGeometry(0.89, 0.02, 12, 80),
+    cremaMat
   );
-  crema.position.y = 0.585;
+  crema.position.y = 0.405;
   crema.rotation.x = Math.PI/2;
   cup.add(crema);
 
+  /* Rim */
+  const rimTorus = new THREE.Mesh(
+    new THREE.TorusGeometry(0.98, 0.035, 16, 80),
+    new THREE.MeshStandardMaterial({ color: 0xfdf6e8, roughness: 0.3, metalness: 0.08 })
+  );
+  rimTorus.position.y = 0.65;
+  rimTorus.rotation.x = Math.PI/2;
+  cup.add(rimTorus);
+
+  /* Handle */
   const handle = new THREE.Mesh(
-    new THREE.TorusGeometry(0.42, 0.09, 20, 48, Math.PI * 1.35),
+    new THREE.TorusGeometry(0.44, 0.09, 20, 48, Math.PI * 1.35),
     new THREE.MeshStandardMaterial({ color: 0xf5e6cc, roughness: 0.32, metalness: 0.08 })
   );
-  handle.position.set(1.18, 0, 0);
+  handle.position.set(1.2, 0, 0);
   handle.rotation.z = -Math.PI / 2 - 0.25;
   cup.add(handle);
-
-  const handleAccent = new THREE.Mesh(
-    new THREE.TorusGeometry(0.42, 0.02, 12, 40, Math.PI * 1.35),
-    new THREE.MeshStandardMaterial({ color: 0xd4a574, metalness: 0.85, roughness: 0.18 })
-  );
-  handleAccent.position.set(1.18, 0, 0.05);
-  handleAccent.rotation.z = -Math.PI / 2 - 0.25;
-  cup.add(handleAccent);
 
   /* Steam */
   const steamGroup = new THREE.Group();
   cup.add(steamGroup);
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 16; i++) {
     const s = new THREE.Mesh(
-      new THREE.SphereGeometry(0.1 + Math.random() * 0.08, 8, 8),
-      new THREE.MeshBasicMaterial({ color: 0xf5e6cc, transparent: true, opacity: 0.14 })
+      new THREE.SphereGeometry(0.09 + Math.random() * 0.07, 8, 8),
+      new THREE.MeshBasicMaterial({ color: 0xf5e6cc, transparent: true, opacity: 0.16 })
     );
     s.position.set(
-      (Math.random() - 0.5) * 0.7,
-      0.6 + Math.random() * 1.4,
-      (Math.random() - 0.5) * 0.5
+      (Math.random() - 0.5) * 0.6,
+      0.75 + Math.random() * 1.2,
+      (Math.random() - 0.5) * 0.4
     );
     s.userData.speed = 0.25 + Math.random() * 0.4;
     s.userData.wobble = Math.random() * Math.PI * 2;
     steamGroup.add(s);
   }
 
-  /* Floating beans */
-  function makeBean(color, scale) {
-    const geo = new THREE.SphereGeometry(0.5, 16, 12);
-    const mat = new THREE.MeshStandardMaterial({
-      color, roughness: 0.62, metalness: 0.1,
-      emissive: 0x1a0f08, emissiveIntensity: 0.12
-    });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.scale.set(scale, scale * 0.72, scale * 0.9);
-    return mesh;
+  /* Roast palette */
+  const ROAST_PALETTE = [
+    { mid:0xa8734c, lo:0x6b3d20, crema:0xd9b48f }, // Light
+    { mid:0x6b3d20, lo:0x3a1f10, crema:0xb89870 }, // Medium
+    { mid:0x4a2c1a, lo:0x1a0f08, crema:0x8b5a3c }, // Medium-Dark
+    { mid:0x2a1810, lo:0x0a0503, crema:0x4a2c1a }  // Dark
+  ];
+  let roastIndex = 2;
+  function applyRoast(i) {
+    const p = ROAST_PALETTE[i];
+    coffeeMat.color.setHex(p.mid);
+    coffeeMat.emissive.setHex(p.lo);
+    cremaMat.color.setHex(p.crema);
+    cremaMat.emissive.setHex(p.crema);
   }
+  applyRoast(roastIndex);
 
-  const beansGroup = new THREE.Group();
-  scene.add(beansGroup);
+  canvas.style.pointerEvents = 'auto';
+  canvas.style.cursor = 'pointer';
+  canvas.addEventListener('click', () => {
+    roastIndex = (roastIndex + 1) % ROAST_PALETTE.length;
+    applyRoast(roastIndex);
+  });
 
-  const orbitBeans = [];
-  for (let i = 0; i < 10; i++) {
-    const b = makeBean(0x4a2c1a, 0.35 + Math.random() * 0.15);
-    const angle = (i / 10) * Math.PI * 2;
-    b.userData = {
-      angle, radius: 2.4 + Math.random() * 0.4,
-      yOffset: (Math.random() - 0.5) * 1.6,
-      speed: 0.15 + Math.random() * 0.1,
-      rotSpeed: 0.3 + Math.random() * 0.4,
-      wobble: Math.random() * Math.PI * 2
-    };
-    b.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
-    beansGroup.add(b);
-    orbitBeans.push(b);
-  }
-
-  const nearBeans = [];
-  for (let i = 0; i < 4; i++) {
-    const b = makeBean(0x3a1f10, 0.5 + Math.random() * 0.2);
-    b.position.set(
-      (Math.random() - 0.5) * 5,
-      (Math.random() - 0.5) * 3,
-      -1.5 - Math.random() * 2
-    );
-    b.userData.spin = 0.2 + Math.random() * 0.3;
-    scene.add(b);
-    nearBeans.push(b);
-  }
-
-  /* Dust */
+  /* Ambient dust */
   const dustGeo = new THREE.BufferGeometry();
-  const dustCount = 120;
+  const dustCount = 60;
   const dustPos = new Float32Array(dustCount * 3);
   for (let i = 0; i < dustCount; i++) {
-    dustPos[i*3]   = (Math.random() - 0.5) * 10;
-    dustPos[i*3+1] = (Math.random() - 0.5) * 6;
-    dustPos[i*3+2] = (Math.random() - 0.5) * 5;
+    dustPos[i*3]   = (Math.random() - 0.5) * 5;
+    dustPos[i*3+1] = (Math.random() - 0.5) * 3;
+    dustPos[i*3+2] = (Math.random() - 0.5) * 3;
   }
   dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
   const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({
-    color: 0xd4a574, size: 0.035, transparent: true, opacity: 0.65
+    color: 0xd4a574, size: 0.03, transparent: true, opacity: 0.5
   }));
   scene.add(dust);
-
-  let mx = 0, my = 0, targetRotY = 0;
-  window.addEventListener('mousemove', e => {
-    mx = (e.clientX / innerWidth) * 2 - 1;
-    my = -(e.clientY / innerHeight) * 2 + 1;
-  });
 
   const clock = new THREE.Clock();
   (function loop(){
     const dt = clock.getDelta();
     const t = clock.elapsedTime;
 
-    targetRotY += dt * 0.18;
-    cup.rotation.y += ((mx * 0.5 + targetRotY * 0.3) - cup.rotation.y) * Math.min(1, dt * 2.5);
-    cup.rotation.x += ((my * 0.15) - cup.rotation.x) * Math.min(1, dt * 2.5);
-    cup.position.y = Math.sin(t * 0.7) * 0.08;
+    /* Continuous slow circular rotation */
+    cup.rotation.y += dt * 0.4;
 
-    orbitBeans.forEach(b => {
-      const d = b.userData;
-      d.angle += dt * d.speed;
-      b.position.x = Math.cos(d.angle) * d.radius;
-      b.position.z = Math.sin(d.angle) * d.radius;
-      b.position.y = d.yOffset + Math.sin(t * 0.8 + d.wobble) * 0.2;
-      b.rotation.x += dt * d.rotSpeed;
-      b.rotation.y += dt * d.rotSpeed * 0.7;
-      b.rotation.z += dt * d.rotSpeed * 0.4;
-    });
+    /* Gentle float */
+    cup.position.y = -0.15 + Math.sin(t * 0.8) * 0.06;
 
-    nearBeans.forEach(b => {
-      b.rotation.x += dt * b.userData.spin;
-      b.rotation.y += dt * b.userData.spin * 0.6;
-    });
-
+    /* Steam */
     steamGroup.children.forEach(s => {
       s.position.y += dt * s.userData.speed;
       s.position.x += Math.sin(t * 1.2 + s.userData.wobble) * dt * 0.15;
-      if (s.position.y > 2.2) s.position.y = 0.6;
-      const life = (s.position.y - 0.6) / 1.6;
+      if (s.position.y > 2.0) s.position.y = 0.75;
+      const life = (s.position.y - 0.75) / 1.25;
       s.material.opacity = Math.max(0, 0.18 * (1 - life));
-      s.scale.setScalar(0.7 + life * 1.5);
+      s.scale.setScalar(0.7 + life * 1.4);
     });
 
-    dust.rotation.y += dt * 0.04;
+    dust.rotation.y += dt * 0.05;
 
     renderer.render(scene, camera);
     requestAnimationFrame(loop);
   })();
 
   window.addEventListener('resize', () => {
-    camera.aspect = innerWidth / innerHeight;
+    const w = canvas.clientWidth || 380;
+    const h = canvas.clientHeight || 380;
+    camera.aspect = w/h;
     camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
+    renderer.setSize(w, h, false);
   });
 })();
 
 /* ===================================================
-   12. THREE.JS JOURNEY — 5 stages 3D
+   12. JOURNEY — Rich warm café 3D scene
 =================================================== */
 (function journeyScene(){
   if (!hasThree()) return;
   const canvas = document.getElementById('journey-canvas');
   if (!canvas) return;
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x0f0905, 12, 34);
-  const camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.1, 200);
-  camera.position.set(0, 0.4, 8);
+  scene.fog = new THREE.Fog(0x0f0905, 18, 50);
+  const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 200);
+  camera.position.set(0, 1.0, 8);
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
   renderer.setSize(innerWidth, innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.25;
 
-  scene.add(new THREE.AmbientLight(0xa89480, 0.55));
-  const d1 = new THREE.DirectionalLight(0xf5e6cc, 1.05);
-  d1.position.set(4, 6, 6); scene.add(d1);
-  const p1 = new THREE.PointLight(0xd4a574, 1.0, 22);
-  p1.position.set(-5, 2, -20); scene.add(p1);
-  const p2 = new THREE.PointLight(0xc99a6b, 0.7, 22);
-  p2.position.set(5, -1, -60); scene.add(p2);
+  /* Warm café lighting */
+  scene.add(new THREE.AmbientLight(0xd4a574, 0.35));
+  const key = new THREE.DirectionalLight(0xffd9a8, 1.4);
+  key.position.set(5, 8, 6); scene.add(key);
+  const warm1 = new THREE.PointLight(0xff9d5c, 2.0, 20);
+  warm1.position.set(-4, 3, -10); scene.add(warm1);
+  const warm2 = new THREE.PointLight(0xd4a574, 1.8, 20);
+  warm2.position.set(4, 3, -30); scene.add(warm2);
+  const warm3 = new THREE.PointLight(0xffb060, 1.6, 20);
+  warm3.position.set(-3, 3, -55); scene.add(warm3);
+  const warm4 = new THREE.PointLight(0xffd9a8, 1.5, 20);
+  warm4.position.set(3, 3, -80); scene.add(warm4);
 
-  function makeBean(color, scale) {
-    const geo = new THREE.SphereGeometry(0.5, 16, 12);
-    const mat = new THREE.MeshStandardMaterial({
-      color, roughness: 0.65, metalness: 0.1,
-      emissive: 0x1a0f08, emissiveIntensity: 0.1
-    });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.scale.set(scale, scale*0.72, scale*0.9);
-    return mesh;
-  }
+  /* ============ COMMON ELEMENTS ============ */
 
-  const beanGroup = new THREE.Group();
-  scene.add(beanGroup);
-  for (let i = 0; i < 14; i++) {
-    const b = makeBean(0x4a2c1a, 0.8 + Math.random()*0.5);
-    b.position.set(Math.sin(i*1.7)*1.6, Math.cos(i*2.3)*0.9, Math.sin(i*0.9)*1.2);
-    b.rotation.set(Math.random()*6, Math.random()*6, Math.random()*6);
-    beanGroup.add(b);
-  }
+  /* Wood floor */
+  const floorGeo = new THREE.PlaneGeometry(60, 200);
+  const floorMat = new THREE.MeshStandardMaterial({
+    color: 0x2a1810, roughness: 0.9, metalness: 0.05
+  });
+  const floor = new THREE.Mesh(floorGeo, floorMat);
+  floor.rotation.x = -Math.PI/2;
+  floor.position.set(0, -1.8, -50);
+  scene.add(floor);
 
-  const roastGroup = new THREE.Group();
-  roastGroup.position.z = -22;
-  scene.add(roastGroup);
-  const drum = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.9, 0.9, 2.4, 28, 1, true),
-    new THREE.MeshStandardMaterial({ color:0x3a1f10, metalness:0.85, roughness:0.3, side: THREE.DoubleSide })
-  );
-  drum.rotation.z = Math.PI/2;
-  roastGroup.add(drum);
-  const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(0.9, 0.045, 12, 40),
-    new THREE.MeshStandardMaterial({ color:0xd4a574, metalness:0.9, roughness:0.2 })
-  );
-  ring.rotation.z = Math.PI/2;
-  roastGroup.add(ring);
-  const glow = new THREE.Mesh(
-    new THREE.SphereGeometry(0.7, 16, 12),
-    new THREE.MeshBasicMaterial({ color:0xd4a574, transparent:true, opacity:0.35 })
-  );
-  glow.position.y = -1.4;
-  roastGroup.add(glow);
-  const roastLight = new THREE.PointLight(0xd4a574, 1.6, 4);
-  roastLight.position.set(0, -1.2, 0);
-  roastGroup.add(roastLight);
-  for (let i = 0; i < 8; i++) {
-    const b = makeBean(0x3a1f10, 0.35);
-    b.position.set((Math.random()-0.5)*0.7, (Math.random()-0.5)*0.7, (Math.random()-0.5)*0.7);
-    roastGroup.add(b);
-  }
-  const heatGroup = new THREE.Group();
-  roastGroup.add(heatGroup);
-  for (let i = 0; i < 12; i++) {
-    const h = new THREE.Mesh(
-      new THREE.SphereGeometry(0.04, 6, 6),
-      new THREE.MeshBasicMaterial({ color:0xd4a574, transparent:true, opacity:0.35 })
+  /* Wooden beam pattern (simple stripes) */
+  for (let i = 0; i < 40; i++) {
+    const beam = new THREE.Mesh(
+      new THREE.BoxGeometry(0.08, 0.02, 60),
+      new THREE.MeshStandardMaterial({ color: 0x1a0f08, roughness: 0.95 })
     );
-    h.position.set((Math.random()-0.5)*1.6, -1.2 + Math.random()*2, (Math.random()-0.5)*1.4);
+    beam.position.set(-30 + i * 1.5, -1.78, -50);
+    scene.add(beam);
+  }
+
+  /* Back wall (dark) */
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0x1a0f08, roughness: 0.85 });
+  const backWall = new THREE.Mesh(new THREE.PlaneGeometry(60, 20), wallMat);
+  backWall.position.set(0, 4, -110);
+  scene.add(backWall);
+
+  /* Hanging pendant lamps (visible throughout journey) */
+  function makePendantLamp(x, z, lightColor) {
+    const g = new THREE.Group();
+    g.position.set(x, 4.5, z);
+
+    /* Cord */
+    const cord = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.012, 0.012, 3.0, 6),
+      new THREE.MeshStandardMaterial({ color: 0x2a1810 })
+    );
+    cord.position.y = -1.5;
+    g.add(cord);
+
+    /* Shade */
+    const shade = new THREE.Mesh(
+      new THREE.ConeGeometry(0.5, 0.6, 24, 1, true),
+      new THREE.MeshStandardMaterial({
+        color: 0x1a0f08, metalness: 0.85, roughness: 0.35,
+        side: THREE.DoubleSide
+      })
+    );
+    shade.position.y = -3.1;
+    shade.rotation.x = Math.PI;
+    g.add(shade);
+
+    /* Glow */
+    const glow = new THREE.Mesh(
+      new THREE.SphereGeometry(0.25, 16, 12),
+      new THREE.MeshBasicMaterial({ color: lightColor, transparent: true, opacity: 0.7 })
+    );
+    glow.position.y = -3.2;
+    g.add(glow);
+
+    /* Light */
+    const l = new THREE.PointLight(lightColor, 2.0, 8);
+    l.position.y = -3.4;
+    g.add(l);
+
+    scene.add(g);
+    return g;
+  }
+
+  makePendantLamp(-3, -3, 0xffca7a);
+  makePendantLamp(3, -3, 0xffca7a);
+  makePendantLamp(-3, -25, 0xffb060);
+  makePendantLamp(3, -25, 0xffb060);
+  makePendantLamp(-3, -47, 0xd4a574);
+  makePendantLamp(3, -47, 0xd4a574);
+  makePendantLamp(-3, -69, 0xff9d5c);
+  makePendantLamp(3, -69, 0xff9d5c);
+  makePendantLamp(-3, -91, 0xffca7a);
+  makePendantLamp(3, -91, 0xffca7a);
+
+  /* ============ STAGE 0 — Coffee bar / counter with beans ============ */
+  const s0 = new THREE.Group();
+  scene.add(s0);
+
+  /* Wooden counter */
+  const counter = new THREE.Mesh(
+    new THREE.BoxGeometry(6, 0.3, 1.5),
+    new THREE.MeshStandardMaterial({ color: 0x3a1f10, roughness: 0.75 })
+  );
+  counter.position.y = -0.6;
+  s0.add(counter);
+
+  /* Counter legs */
+  for (let i = 0; i < 4; i++) {
+    const leg = new THREE.Mesh(
+      new THREE.BoxGeometry(0.15, 1.2, 0.15),
+      new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.85 })
+    );
+    leg.position.set(i < 2 ? -2.7 : 2.7, -1.4, i % 2 === 0 ? -0.5 : 0.5);
+    s0.add(leg);
+  }
+
+  /* Small glass jars with beans */
+  for (let j = 0; j < 3; j++) {
+    const jar = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.35, 0.35, 0.8, 20, 1, true),
+      new THREE.MeshPhysicalMaterial({
+        color: 0xdfe6e6, transparent: true, opacity: 0.25,
+        roughness: 0.05, side: THREE.DoubleSide
+      })
+    );
+    jar.position.set(-1.8 + j*1.8, -0.05, 0);
+    s0.add(jar);
+
+    /* Beans inside */
+    for (let k = 0; k < 15; k++) {
+      const bean = new THREE.Mesh(
+        new THREE.SphereGeometry(0.05, 8, 6),
+        new THREE.MeshStandardMaterial({ color: 0x4a2c1a, roughness: 0.7 })
+      );
+      bean.scale.set(1, 0.72, 0.9);
+      bean.position.set(
+        -1.8 + j*1.8 + (Math.random()-0.5)*0.5,
+        -0.35 + Math.random()*0.5,
+        (Math.random()-0.5)*0.5
+      );
+      s0.add(bean);
+    }
+  }
+
+  /* ============ STAGE 1 — Roasting area ============ */
+  const s1 = new THREE.Group();
+  s1.position.z = -22;
+  scene.add(s1);
+
+  /* Industrial roaster */
+  const roasterBase = new THREE.Mesh(
+    new THREE.BoxGeometry(2.2, 1.8, 1.6),
+    new THREE.MeshStandardMaterial({ color: 0x3a1f10, metalness: 0.9, roughness: 0.3 })
+  );
+  roasterBase.position.y = 0;
+  s1.add(roasterBase);
+
+  const roasterDrum = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.85, 0.85, 2.4, 32, 1, true),
+    new THREE.MeshStandardMaterial({
+      color: 0x2a1810, metalness: 0.95, roughness: 0.25,
+      side: THREE.DoubleSide
+    })
+  );
+  roasterDrum.rotation.z = Math.PI/2;
+  roasterDrum.position.y = 1.3;
+  s1.add(roasterDrum);
+
+  /* Gold rings */
+  const drumRing = new THREE.Mesh(
+    new THREE.TorusGeometry(0.85, 0.05, 16, 48),
+    new THREE.MeshStandardMaterial({ color: 0xd4a574, metalness: 0.95, roughness: 0.2 })
+  );
+  drumRing.rotation.z = Math.PI/2;
+  drumRing.position.y = 1.3;
+  s1.add(drumRing);
+
+  /* Fire glow below */
+  const fireGlow = new THREE.Mesh(
+    new THREE.SphereGeometry(0.9, 20, 16),
+    new THREE.MeshBasicMaterial({ color: 0xff9d5c, transparent: true, opacity: 0.55 })
+  );
+  fireGlow.position.y = 0.2;
+  s1.add(fireGlow);
+
+  const fireLight = new THREE.PointLight(0xff9d5c, 2.4, 6);
+  fireLight.position.set(0, 0.3, 0);
+  s1.add(fireLight);
+
+  /* Heat particles */
+  const heatGroup = new THREE.Group();
+  s1.add(heatGroup);
+  for (let i = 0; i < 18; i++) {
+    const h = new THREE.Mesh(
+      new THREE.SphereGeometry(0.05, 6, 6),
+      new THREE.MeshBasicMaterial({ color: 0xffb060, transparent: true, opacity: 0.5 })
+    );
+    h.position.set((Math.random()-0.5)*2.2, 0.4 + Math.random()*1.8, (Math.random()-0.5)*1.4);
     heatGroup.add(h);
   }
 
-  const grindGroup = new THREE.Group();
-  grindGroup.position.z = -44;
-  scene.add(grindGroup);
-  const grinder = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.55, 0.55, 0.9, 20),
-    new THREE.MeshStandardMaterial({ color:0x3a1f10, metalness:0.7, roughness:0.35 })
+  /* ============ STAGE 2 — Grinder station ============ */
+  const s2 = new THREE.Group();
+  s2.position.z = -44;
+  scene.add(s2);
+
+  /* Counter */
+  const grindCounter = new THREE.Mesh(
+    new THREE.BoxGeometry(5, 0.3, 1.5),
+    new THREE.MeshStandardMaterial({ color: 0x3a1f10, roughness: 0.75 })
   );
-  grinder.position.y = 0.9;
-  grindGroup.add(grinder);
-  const grinderRing = new THREE.Mesh(
-    new THREE.TorusGeometry(0.36, 0.05, 12, 24),
-    new THREE.MeshStandardMaterial({ color:0xd4a574, metalness:0.95, roughness:0.15 })
+  grindCounter.position.y = -0.6;
+  s2.add(grindCounter);
+
+  /* Big grinder */
+  const grinderBody = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.7, 0.7, 1.2, 24),
+    new THREE.MeshStandardMaterial({ color: 0x3a1f10, metalness: 0.8, roughness: 0.3 })
   );
-  grinderRing.position.y = 1.55;
-  grinderRing.rotation.x = Math.PI/2;
-  grindGroup.add(grinderRing);
-  const handle = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.09, 0.09, 0.4, 12),
-    new THREE.MeshStandardMaterial({ color:0xd4a574, metalness:0.95, roughness:0.15 })
+  grinderBody.position.y = 0.4;
+  s2.add(grinderBody);
+
+  const grinderTop = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.5, 0.7, 0.5, 24),
+    new THREE.MeshStandardMaterial({ color: 0x2a1810, metalness: 0.85, roughness: 0.28 })
   );
-  handle.position.y = 1.65;
-  grindGroup.add(handle);
-  const base = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.62, 0.42, 0.4, 20),
-    new THREE.MeshStandardMaterial({ color:0x2a1810, metalness:0.6, roughness:0.4 })
+  grinderTop.position.y = 1.25;
+  s2.add(grinderTop);
+
+  const grinderKnob = new THREE.Mesh(
+    new THREE.TorusGeometry(0.35, 0.06, 16, 32),
+    new THREE.MeshStandardMaterial({ color: 0xd4a574, metalness: 0.95, roughness: 0.15 })
   );
-  base.position.y = 0.35;
-  grindGroup.add(base);
+  grinderKnob.position.y = 1.55;
+  grinderKnob.rotation.x = Math.PI/2;
+  s2.add(grinderKnob);
+
+  const grinderBase = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.85, 0.55, 0.4, 24),
+    new THREE.MeshStandardMaterial({ color: 0x2a1810, metalness: 0.6, roughness: 0.4 })
+  );
+  grinderBase.position.y = -0.35;
+  s2.add(grinderBase);
+
+  /* Grounds falling */
   const grounds = new THREE.Group();
-  grindGroup.add(grounds);
+  s2.add(grounds);
   for (let i = 0; i < 40; i++) {
     const g = new THREE.Mesh(
       new THREE.SphereGeometry(0.03 + Math.random()*0.03, 5, 5),
-      new THREE.MeshStandardMaterial({ color:0x3a1f10, roughness:0.9 })
+      new THREE.MeshStandardMaterial({ color: 0x3a1f10, roughness: 0.9 })
     );
-    g.position.set((Math.random()-0.5)*0.6, Math.random()*2 - 1, (Math.random()-0.5)*0.6);
+    g.position.set((Math.random()-0.5)*0.8, Math.random()*2 - 0.8, (Math.random()-0.5)*0.8);
     grounds.add(g);
   }
 
-  const brewGroup = new THREE.Group();
-  brewGroup.position.z = -66;
-  scene.add(brewGroup);
-  const cone = new THREE.Mesh(
-    new THREE.ConeGeometry(0.8, 0.9, 24, 1, true),
-    new THREE.MeshStandardMaterial({ color:0xf5e6cc, roughness:0.55, side: THREE.DoubleSide })
-  );
-  cone.position.y = 0.9;
-  brewGroup.add(cone);
-  for (let i = 0; i < 6; i++) {
-    const g = new THREE.Mesh(
-      new THREE.SphereGeometry(0.05, 6, 6),
-      new THREE.MeshStandardMaterial({ color:0x3a1f10, roughness:0.95 })
-    );
-    g.position.set((Math.random()-0.5)*0.5, 0.7, (Math.random()-0.5)*0.5);
-    brewGroup.add(g);
-  }
-  const carafe = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.85, 0.65, 1.4, 26, 1, true),
-    new THREE.MeshPhysicalMaterial({ color:0xdfe6e6, transparent:true, opacity:0.22, roughness:0.05, side: THREE.DoubleSide })
-  );
-  carafe.position.y = -0.3;
-  brewGroup.add(carafe);
-  const liquid = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.72, 0.55, 0.6, 22),
-    new THREE.MeshStandardMaterial({ color:0x2a1810, roughness:0.35, metalness:0.1 })
-  );
-  liquid.position.y = -0.75;
-  liquid.scale.y = 0.1;
-  brewGroup.add(liquid);
-  const stream = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.03, 0.03, 0.9, 8),
-    new THREE.MeshBasicMaterial({ color:0xd4a574, transparent:true, opacity:0.55 })
-  );
-  stream.position.y = 0.45;
-  brewGroup.add(stream);
-  const brewLight = new THREE.PointLight(0xd4a574, 1.2, 5);
-  brewLight.position.set(0, 1.5, 1);
-  brewGroup.add(brewLight);
+  /* ============ STAGE 3 — Pour over station ============ */
+  const s3 = new THREE.Group();
+  s3.position.z = -66;
+  scene.add(s3);
 
-  const cupGroup = new THREE.Group();
-  cupGroup.position.z = -88;
-  scene.add(cupGroup);
-  const saucer = new THREE.Mesh(
-    new THREE.CylinderGeometry(1.2, 1.25, 0.06, 36),
-    new THREE.MeshStandardMaterial({ color:0xf5e6cc, roughness:0.4 })
+  /* Counter */
+  const brewCounter = new THREE.Mesh(
+    new THREE.BoxGeometry(5, 0.3, 1.5),
+    new THREE.MeshStandardMaterial({ color: 0x3a1f10, roughness: 0.75 })
   );
-  saucer.position.y = -0.7;
-  cupGroup.add(saucer);
-  const cupBody = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.85, 0.62, 1.15, 36, 1, true),
-    new THREE.MeshStandardMaterial({ color:0xf5e6cc, roughness:0.42, side: THREE.DoubleSide })
+  brewCounter.position.y = -0.6;
+  s3.add(brewCounter);
+
+  /* Pour-over cone */
+  const cone = new THREE.Mesh(
+    new THREE.ConeGeometry(0.9, 1.0, 28, 1, true),
+    new THREE.MeshStandardMaterial({ color: 0xf5e6cc, roughness: 0.55, side: THREE.DoubleSide })
   );
-  cupBody.position.y = -0.05;
-  cupGroup.add(cupBody);
-  const cupFloor = new THREE.Mesh(
-    new THREE.CircleGeometry(0.62, 36),
-    new THREE.MeshStandardMaterial({ color:0xf5e6cc, roughness:0.5, side: THREE.DoubleSide })
+  cone.position.y = 0.5;
+  s3.add(cone);
+
+  /* Coffee inside cone */
+  for (let i = 0; i < 8; i++) {
+    const c = new THREE.Mesh(
+      new THREE.SphereGeometry(0.06, 6, 6),
+      new THREE.MeshStandardMaterial({ color: 0x3a1f10, roughness: 0.95 })
+    );
+    c.position.set((Math.random()-0.5)*0.6, 0.35, (Math.random()-0.5)*0.6);
+    s3.add(c);
+  }
+
+  /* Glass carafe */
+  const carafe = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.95, 0.7, 1.5, 28, 1, true),
+    new THREE.MeshPhysicalMaterial({
+      color: 0xdfe6e6, transparent: true, opacity: 0.22,
+      roughness: 0.05, side: THREE.DoubleSide
+    })
   );
-  cupFloor.position.y = -0.58;
-  cupFloor.rotation.x = -Math.PI/2;
-  cupGroup.add(cupFloor);
-  const coffeeSurface = new THREE.Mesh(
-    new THREE.CircleGeometry(0.8, 40),
-    new THREE.MeshStandardMaterial({ color:0x1a0f08, roughness:0.18, metalness:0.15 })
+  carafe.position.y = -0.35;
+  s3.add(carafe);
+
+  /* Coffee liquid */
+  const brewLiquid = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.8, 0.6, 0.7, 24),
+    new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.3, metalness: 0.12 })
   );
-  coffeeSurface.position.y = 0.35;
-  coffeeSurface.rotation.x = -Math.PI/2;
-  cupGroup.add(coffeeSurface);
-  const cupHandle = new THREE.Mesh(
-    new THREE.TorusGeometry(0.28, 0.07, 12, 26, Math.PI*1.3),
-    new THREE.MeshStandardMaterial({ color:0xf5e6cc, roughness:0.42 })
+  brewLiquid.position.y = -0.8;
+  brewLiquid.scale.y = 0.15;
+  s3.add(brewLiquid);
+
+  /* Water stream */
+  const stream = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.035, 0.035, 1.0, 8),
+    new THREE.MeshBasicMaterial({ color: 0xd4a574, transparent: true, opacity: 0.6 })
   );
-  cupHandle.position.set(1, -0.05, 0);
-  cupHandle.rotation.x = Math.PI/2;
-  cupGroup.add(cupHandle);
-  const cupLight = new THREE.PointLight(0xd4a574, 1.4, 6);
-  cupLight.position.set(1.4, 1.6, 1.6);
-  cupGroup.add(cupLight);
-  const steamGroup = new THREE.Group();
-  cupGroup.add(steamGroup);
-  for (let i = 0; i < 9; i++) {
+  stream.position.y = 0.1;
+  s3.add(stream);
+
+  /* Steam above */
+  for (let i = 0; i < 8; i++) {
     const s = new THREE.Mesh(
       new THREE.SphereGeometry(0.12, 8, 8),
-      new THREE.MeshBasicMaterial({ color:0xf5e6cc, transparent:true, opacity:0.15 })
+      new THREE.MeshBasicMaterial({ color: 0xf5e6cc, transparent: true, opacity: 0.15 })
     );
-    s.position.set((Math.random()-0.5)*0.4, 0.6 + i*0.22, (Math.random()-0.5)*0.3);
-    steamGroup.add(s);
+    s.position.set((Math.random()-0.5)*0.7, 1.3 + i*0.18, (Math.random()-0.5)*0.5);
+    s3.add(s);
   }
 
-  const jDustGeo = new THREE.BufferGeometry();
-  const jDustCount = 140;
-  const jDustPos = new Float32Array(jDustCount*3);
-  for (let i = 0; i < jDustCount; i++) {
-    jDustPos[i*3]   = (Math.random()-0.5)*14;
-    jDustPos[i*3+1] = (Math.random()-0.5)*8;
-    jDustPos[i*3+2] = -Math.random()*100;
-  }
-  jDustGeo.setAttribute('position', new THREE.BufferAttribute(jDustPos, 3));
-  const jDust = new THREE.Points(jDustGeo, new THREE.PointsMaterial({
-    color:0xd4a574, size:0.05, transparent:true, opacity:0.55
-  }));
-  scene.add(jDust);
+  /* ============ STAGE 4 — Final cup on marble table ============ */
+  const s4 = new THREE.Group();
+  s4.position.z = -88;
+  scene.add(s4);
 
+  /* Marble table */
+  const marbleTable = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.8, 1.8, 0.1, 48),
+    new THREE.MeshStandardMaterial({ color: 0xf5e6cc, roughness: 0.25, metalness: 0.1 })
+  );
+  marbleTable.position.y = -0.85;
+  s4.add(marbleTable);
+
+  const tableEdge = new THREE.Mesh(
+    new THREE.TorusGeometry(1.8, 0.06, 12, 60),
+    new THREE.MeshStandardMaterial({ color: 0xd4a574, metalness: 0.7, roughness: 0.25 })
+  );
+  tableEdge.position.y = -0.82;
+  tableEdge.rotation.x = Math.PI/2;
+  s4.add(tableEdge);
+
+  /* Saucer */
+  const finalSaucer = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.25, 1.3, 0.06, 40),
+    new THREE.MeshStandardMaterial({ color: 0xf5e6cc, roughness: 0.4 })
+  );
+  finalSaucer.position.y = -0.55;
+  s4.add(finalSaucer);
+
+  /* Cup */
+  const finalCup = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.85, 0.62, 1.2, 40, 1, true),
+    new THREE.MeshStandardMaterial({ color: 0xf5e6cc, roughness: 0.42, side: THREE.DoubleSide })
+  );
+  finalCup.position.y = 0.15;
+  s4.add(finalCup);
+
+  const finalFloor = new THREE.Mesh(
+    new THREE.CircleGeometry(0.62, 40),
+    new THREE.MeshStandardMaterial({ color: 0xf5e6cc, roughness: 0.5, side: THREE.DoubleSide })
+  );
+  finalFloor.position.y = -0.4;
+  finalFloor.rotation.x = -Math.PI/2;
+  s4.add(finalFloor);
+
+  const finalCoffee = new THREE.Mesh(
+    new THREE.CircleGeometry(0.81, 44),
+    new THREE.MeshStandardMaterial({ color: 0x1a0f08, roughness: 0.16, metalness: 0.2 })
+  );
+  finalCoffee.position.y = 0.6;
+  finalCoffee.rotation.x = -Math.PI/2;
+  s4.add(finalCoffee);
+
+  const finalHandle = new THREE.Mesh(
+    new THREE.TorusGeometry(0.3, 0.08, 14, 28, Math.PI*1.3),
+    new THREE.MeshStandardMaterial({ color: 0xf5e6cc, roughness: 0.42 })
+  );
+  finalHandle.position.set(1.0, 0.15, 0);
+  finalHandle.rotation.x = Math.PI/2;
+  s4.add(finalHandle);
+
+  /* Steam */
+  const finalSteam = new THREE.Group();
+  s4.add(finalSteam);
+  for (let i = 0; i < 12; i++) {
+    const s = new THREE.Mesh(
+      new THREE.SphereGeometry(0.13, 8, 8),
+      new THREE.MeshBasicMaterial({ color: 0xf5e6cc, transparent: true, opacity: 0.16 })
+    );
+    s.position.set((Math.random()-0.5)*0.4, 0.85 + i*0.2, (Math.random()-0.5)*0.3);
+    finalSteam.add(s);
+  }
+
+  /* ============ Scroll progress ============ */
   let progress = 0;
   let stage = 0;
   const journeySection = document.getElementById('journey');
@@ -827,48 +998,62 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   const clock = new THREE.Clock();
   (function loop(){
     const dt = clock.getDelta();
+    const t = clock.elapsedTime;
     computeProgress();
 
-    const targetZ = 8 - progress * 94;
-    const targetX = Math.sin(progress * Math.PI * 2) * 0.7;
-    const targetY = 0.4 + Math.sin(progress * Math.PI * 2.6) * 0.35;
-    const k = Math.min(1, dt * 3.2);
+    /* Camera path — moves through the café */
+    const targetZ = 8 - progress * 96;
+    const targetX = Math.sin(progress * Math.PI * 2) * 0.8;
+    const targetY = 1.0 + Math.sin(progress * Math.PI * 2.6) * 0.3;
+    const k = Math.min(1, dt * 3);
     camera.position.x += (targetX - camera.position.x) * k;
     camera.position.y += (targetY - camera.position.y) * k;
     camera.position.z += (targetZ - camera.position.z) * k;
     camera.lookAt(
-      Math.sin(progress * Math.PI * 2) * 0.4,
-      Math.sin(progress * Math.PI * 1.5) * 0.2,
+      Math.sin(progress * Math.PI * 2) * 0.3,
+      0.2 + Math.sin(progress * Math.PI * 1.5) * 0.15,
       camera.position.z - 8
     );
-    camera.rotation.z = Math.sin(progress * Math.PI * 3) * 0.04;
+    camera.rotation.z = Math.sin(progress * Math.PI * 3) * 0.02;
 
-    beanGroup.rotation.y += dt * 0.1;
-    beanGroup.children.forEach((c,i) => {
-      c.rotation.x += dt * (0.2 + i*0.04);
-      c.rotation.y += dt * 0.15;
+    /* Animate stage elements */
+    /* Roaster drum spins */
+    roasterDrum.rotation.x += dt * 0.6;
+    drumRing.rotation.x += dt * 0.6;
+
+    /* Fire glow pulses */
+    fireGlow.material.opacity = 0.45 + Math.sin(t * 3) * 0.15;
+    fireLight.intensity = 2.0 + Math.sin(t * 3) * 0.6;
+
+    /* Heat particles */
+    heatGroup.children.forEach((c, i) => {
+      c.position.y += dt * (0.25 + (i%5)*0.08);
+      if (c.position.y > 2.2) c.position.y = 0.4;
+      const life = (c.position.y - 0.4) / 1.8;
+      c.material.opacity = Math.max(0, 0.55 * (1 - life));
+      c.scale.setScalar(0.7 + life * 1.5);
     });
-    ring.rotation.z += dt * 0.8;
-    heatGroup.children.forEach((c,i) => {
-      c.position.y += dt * (0.2 + i*0.05);
-      if (c.position.y > 1.6) c.position.y = -1.2;
-      c.material.opacity = Math.max(0, 0.35 - (c.position.y + 1.2) * 0.08);
-    });
-    grinder.rotation.y += dt * 2.2;
-    grinderRing.rotation.z += dt * 2.2;
-    grounds.children.forEach((c,i) => {
+
+    /* Grinder knob spins */
+    grinderKnob.rotation.z += dt * 2.4;
+
+    /* Grounds fall */
+    grounds.children.forEach((c, i) => {
       c.position.y -= dt * (0.5 + (i%5)*0.1);
       if (c.position.y < -1.6) c.position.y = 1.4;
     });
-    liquid.scale.y = Math.min(1, liquid.scale.y + dt * 0.15);
-    stream.material.opacity = 0.5 + Math.sin(performance.now()*0.004)*0.1;
-    steamGroup.children.forEach(c => {
+
+    /* Brew liquid rises + stream */
+    brewLiquid.scale.y = Math.min(1, brewLiquid.scale.y + dt * 0.15);
+    stream.material.opacity = 0.55 + Math.sin(t * 4) * 0.1;
+
+    /* Final steam */
+    finalSteam.children.forEach(c => {
       c.position.y += dt * 0.4;
-      if (c.position.y > 2.4) c.position.y = 0.6;
-      c.scale.setScalar(0.7 + (c.position.y - 0.6) * 0.4);
-      c.material.opacity = Math.max(0, 0.22 - (c.position.y - 0.6) * 0.1);
+      if (c.position.y > 2.6) c.position.y = 0.85;
+      c.scale.setScalar(0.7 + (c.position.y - 0.85) * 0.4);
+      c.material.opacity = Math.max(0, 0.22 - (c.position.y - 0.85) * 0.1);
     });
-    jDust.rotation.y += dt * 0.01;
 
     const s = Math.min(4, Math.floor(progress * 5.0001));
     updateStage(s);
@@ -885,7 +1070,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 })();
 
 /* ===================================================
-   13. THREE.JS FINAL — LUXURY CUP CAROUSEL (no arrows)
+   13. FINAL — Single big clear cup carousel
+   Camera looks straight at cup so coffee is visible
 =================================================== */
 (function finalCarousel(){
   if (!hasThree()) return;
@@ -894,39 +1080,40 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(38, innerWidth/innerHeight, 0.1, 100);
-  camera.position.set(0, 1.2, 5.5);
-  camera.lookAt(0, 0, 0);
+  /* Camera positioned HIGH and CLOSE, looking DOWN at cup so we see coffee */
+camera.position.set(0, 2.6, 5.0);
+camera.lookAt(0, -0.1, 0);
 
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.7));
   renderer.setSize(innerWidth, innerHeight);
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.25;
 
-  scene.add(new THREE.AmbientLight(0xa89480, 0.55));
-  const keyLight = new THREE.DirectionalLight(0xf5e6cc, 1.6);
-  keyLight.position.set(3, 5, 4); scene.add(keyLight);
-  const rimLight = new THREE.PointLight(0xd4a574, 1.8, 14);
-  rimLight.position.set(-4, 2, -2); scene.add(rimLight);
-  const warmLight = new THREE.PointLight(0xc99a6b, 1.4, 12);
-  warmLight.position.set(3, 1, 3); scene.add(warmLight);
-  const fillLight = new THREE.PointLight(0x4a2c1a, 1.2, 10);
-  fillLight.position.set(0, -2, 2); scene.add(fillLight);
+  scene.add(new THREE.AmbientLight(0xa89480, 0.6));
+  const keyLight = new THREE.DirectionalLight(0xf5e6cc, 1.7);
+  keyLight.position.set(2, 6, 4); scene.add(keyLight);
+  const rimLight = new THREE.PointLight(0xd4a574, 2.2, 18);
+  rimLight.position.set(-4, 3, -2); scene.add(rimLight);
+  const warmLight = new THREE.PointLight(0xc99a6b, 1.8, 16);
+  warmLight.position.set(3, 2, 3); scene.add(warmLight);
+  const topLight = new THREE.PointLight(0xffd9a8, 1.4, 12);
+  topLight.position.set(0, 5, 0); scene.add(topLight);
 
   const CUPS = [
     { label:'Espresso', name:'Signature <em>Espresso</em>', notes:'Rich · Bold · Chocolate',
-      coffeeHi:'#a8734c', coffeeMid:'#4a2c1a', coffeeLo:'#1a0f08',
-      cupTop:'#f5e6cc', cupBottom:'#c9a780', size:1.0 },
+      coffeeHi:0xa8734c, coffeeMid:0x4a2c1a, coffeeLo:0x1a0f08,
+      cupTop:0xf5e6cc },
     { label:'Latte', name:'House <em>Latte</em>', notes:'Smooth · Velvet · Nutty',
-      coffeeHi:'#d4a574', coffeeMid:'#8b5a3c', coffeeLo:'#3a1f10',
-      cupTop:'#fdf6e8', cupBottom:'#e8d5b8', size:1.15 },
+      coffeeHi:0xd4a574, coffeeMid:0x8b5a3c, coffeeLo:0x3a1f10,
+      cupTop:0xfdf6e8 },
     { label:'Mocha', name:'Midnight <em>Mocha</em>', notes:'Deep · Smoky · Intense',
-      coffeeHi:'#6b3d20', coffeeMid:'#2a1810', coffeeLo:'#0a0503',
-      cupTop:'#3a1f10', cupBottom:'#1a0f08', size:1.05 },
+      coffeeHi:0x6b3d20, coffeeMid:0x2a1810, coffeeLo:0x0a0503,
+      cupTop:0x3a1f10 },
     { label:'Cold Brew', name:'Cold <em>Brew</em>', notes:'Smooth · Sweet · Low-Acid',
-      coffeeHi:'#8b5a3c', coffeeMid:'#3a1f10', coffeeLo:'#150a05',
-      cupTop:'#e8d5b8', cupBottom:'#a8734c', size:1.1 }
+      coffeeHi:0x8b5a3c, coffeeMid:0x3a1f10, coffeeLo:0x150a05,
+      cupTop:0xe8d5b8 }
   ];
 
   let currentIndex = 0;
@@ -936,70 +1123,96 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   function buildCup(data) {
     const g = new THREE.Group();
 
+    /* Saucer */
     const saucer = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.15, 1.2, 0.06, 48),
-      new THREE.MeshStandardMaterial({ color: new THREE.Color(data.cupTop), roughness: 0.35, metalness: 0.05 })
+      new THREE.CylinderGeometry(1.5, 1.55, 0.08, 56),
+      new THREE.MeshStandardMaterial({ color: data.cupTop, roughness: 0.35, metalness: 0.05 })
     );
-    saucer.position.y = -0.9; g.add(saucer);
+    saucer.position.y = -1.0; g.add(saucer);
 
-    const rim = new THREE.Mesh(
-      new THREE.TorusGeometry(1.15, 0.02, 12, 60),
-      new THREE.MeshStandardMaterial({ color:0xd4a574, metalness:0.7, roughness:0.25 })
+    const saucerRim = new THREE.Mesh(
+      new THREE.TorusGeometry(1.5, 0.03, 14, 60),
+      new THREE.MeshStandardMaterial({ color:0xd4a574, metalness:0.75, roughness:0.22 })
     );
-    rim.position.y = -0.88; rim.rotation.x = Math.PI/2; g.add(rim);
+    saucerRim.position.y = -0.97; saucerRim.rotation.x = Math.PI/2; g.add(saucerRim);
 
+    /* Body — WIDE mouth so coffee is clearly visible */
     const body = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.85, 0.65, 1.25, 48),
-      new THREE.MeshStandardMaterial({ color: new THREE.Color(data.cupTop), roughness: 0.32, metalness: 0.06 })
-    );
-    body.position.y = -0.2; g.add(body);
-
-    const coffee = new THREE.Mesh(
-      new THREE.CircleGeometry(0.82, 48),
+      new THREE.CylinderGeometry(1.15, 0.85, 1.5, 56, 1, true),
       new THREE.MeshStandardMaterial({
-        color: new THREE.Color(data.coffeeMid), roughness: 0.18, metalness: 0.15,
-        emissive: new THREE.Color(data.coffeeLo), emissiveIntensity: 0.08
+        color: data.cupTop, roughness: 0.3, metalness: 0.06,
+        side: THREE.DoubleSide
       })
     );
-    coffee.position.y = 0.4; coffee.rotation.x = -Math.PI/2; g.add(coffee);
+    body.position.y = -0.15; g.add(body);
+
+    const bottom = new THREE.Mesh(
+      new THREE.CircleGeometry(0.85, 48),
+      new THREE.MeshStandardMaterial({ color: data.cupTop, roughness: 0.5, side: THREE.DoubleSide })
+    );
+    bottom.position.y = -0.9; bottom.rotation.x = -Math.PI/2; g.add(bottom);
+
+    /* Rim */
+    const rimTorus = new THREE.Mesh(
+      new THREE.TorusGeometry(1.15, 0.04, 14, 60),
+      new THREE.MeshStandardMaterial({ color: data.cupTop, roughness: 0.3, metalness: 0.08 })
+    );
+    rimTorus.position.y = 0.6; rimTorus.rotation.x = Math.PI/2; g.add(rimTorus);
+
+    /* Coffee surface — placed LOWER so camera looks into cup and sees it clearly */
+    const coffee = new THREE.Mesh(
+      new THREE.CircleGeometry(1.1, 56),
+      new THREE.MeshStandardMaterial({
+        color: data.coffeeMid, roughness: 0.15, metalness: 0.25,
+        emissive: data.coffeeLo, emissiveIntensity: 0.12
+      })
+    );
+    coffee.position.y = 0.42; coffee.rotation.x = -Math.PI/2; g.add(coffee);
 
     const crema = new THREE.Mesh(
-      new THREE.TorusGeometry(0.78, 0.012, 10, 60),
+      new THREE.TorusGeometry(1.05, 0.02, 12, 60),
       new THREE.MeshStandardMaterial({
-        color: new THREE.Color(data.coffeeHi), roughness: 0.5, metalness: 0.1,
-        emissive: new THREE.Color(data.coffeeHi), emissiveIntensity: 0.15
+        color: data.coffeeHi, roughness: 0.45, metalness: 0.1,
+        emissive: data.coffeeHi, emissiveIntensity: 0.25
       })
     );
-    crema.position.y = 0.405; crema.rotation.x = Math.PI/2; g.add(crema);
+    crema.position.y = 0.428; crema.rotation.x = Math.PI/2; g.add(crema);
 
-    const cupRim = new THREE.Mesh(
-      new THREE.TorusGeometry(0.85, 0.03, 14, 60),
-      new THREE.MeshStandardMaterial({ color: new THREE.Color(data.cupTop), roughness: 0.3, metalness: 0.08 })
+    /* Shine reflection */
+    const shine = new THREE.Mesh(
+      new THREE.CircleGeometry(0.35, 32),
+      new THREE.MeshBasicMaterial({
+        color: 0xffffff, transparent: true, opacity: 0.08,
+        side: THREE.DoubleSide
+      })
     );
-    cupRim.position.y = 0.425; cupRim.rotation.x = Math.PI/2; g.add(cupRim);
+    shine.position.set(-0.3, 0.43, -0.35);
+    shine.rotation.x = -Math.PI/2;
+    g.add(shine);
 
+    /* Handle */
     const handle = new THREE.Mesh(
-      new THREE.TorusGeometry(0.32, 0.07, 16, 40, Math.PI * 1.25),
-      new THREE.MeshStandardMaterial({ color: new THREE.Color(data.cupTop), roughness: 0.32, metalness: 0.06 })
+      new THREE.TorusGeometry(0.42, 0.09, 16, 40, Math.PI * 1.3),
+      new THREE.MeshStandardMaterial({ color: data.cupTop, roughness: 0.32, metalness: 0.06 })
     );
-    handle.position.set(1.0, -0.15, 0);
-    handle.rotation.z = -Math.PI / 2 + 0.4;
+    handle.position.set(1.35, -0.1, 0);
+    handle.rotation.z = -Math.PI / 2 + 0.35;
     g.add(handle);
 
+    /* Steam */
     const steamGroup = new THREE.Group();
     for (let i = 0; i < 14; i++) {
       const s = new THREE.Mesh(
-        new THREE.SphereGeometry(0.08 + Math.random() * 0.06, 8, 8),
+        new THREE.SphereGeometry(0.11, 8, 8),
         new THREE.MeshBasicMaterial({ color: 0xf5e6cc, transparent: true, opacity: 0.16 })
       );
-      s.position.set((Math.random() - 0.5) * 0.5, 0.5 + Math.random() * 0.9, (Math.random() - 0.5) * 0.4);
+      s.position.set((Math.random() - 0.5) * 0.7, 0.7 + Math.random() * 1.0, (Math.random() - 0.5) * 0.6);
       s.userData.speed = 0.25 + Math.random() * 0.35;
       steamGroup.add(s);
     }
     g.add(steamGroup);
     g.userData.steamGroup = steamGroup;
 
-    g.scale.setScalar(data.size);
     return g;
   }
 
@@ -1014,7 +1227,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   cupMeshes[0].visible = true;
   cupMeshes[0].rotation.y = 0;
 
-  const RADIUS = 4.5;
+  const RADIUS = 5.5;
   cupMeshes.forEach((m, i) => {
     m.userData.baseAngle = (i / cupMeshes.length) * Math.PI * 2;
   });
@@ -1076,9 +1289,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     canvas.style.cursor = 'grabbing';
   });
   window.addEventListener('pointerup', () => {
-    if (isDragging && !dragged) {
-      next();
-    }
+    if (isDragging && !dragged) next();
     isDragging = false;
     canvas.style.cursor = 'pointer';
   });
@@ -1109,7 +1320,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 
     if (!isDragging) {
       autoRotateTimer += dt;
-      if (autoRotateTimer > 5) {
+      if (autoRotateTimer > 6) {
         targetAngle -= dt * 0.1;
         const base = -targetAngle / ((Math.PI*2) / CUPS.length);
         const idx = ((Math.round(base) % CUPS.length) + CUPS.length) % CUPS.length;
@@ -1125,24 +1336,25 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 
       let norm = ((a % (Math.PI*2)) + Math.PI*3) % (Math.PI*2) - Math.PI;
       const absA = Math.abs(norm);
-      m.visible = absA < Math.PI * 0.6;
-      const scale = (1 - Math.min(absA, Math.PI) * 0.18) * (CUPS[i].size || 1);
+      m.visible = absA < Math.PI * 0.7;
+      const scale = 1 - Math.min(absA, Math.PI) * 0.12;
       m.scale.setScalar(scale);
-      m.position.y = Math.sin(t * 0.8 + i) * 0.12;
+      m.position.y = -0.15 + Math.sin(t * 0.8 + i) * 0.1;
 
       const steam = m.userData.steamGroup;
       if (steam) {
         steam.children.forEach(s => {
           s.position.y += dt * s.userData.speed;
-          if (s.position.y > 1.8) s.position.y = 0.5;
-          s.material.opacity = Math.max(0, 0.18 * (1 - (s.position.y - 0.5) / 1.3));
+          if (s.position.y > 2.0) s.position.y = 0.7;
+          s.material.opacity = Math.max(0, 0.16 * (1 - (s.position.y - 0.7) / 1.3));
         });
       }
     });
 
-    camera.position.x += ((mouseX * 0.6) - camera.position.x) * Math.min(1, dt * 2);
-    camera.position.y += ((1.2 + mouseY * 0.3) - camera.position.y) * Math.min(1, dt * 2);
-    camera.lookAt(0, 0.1, 0);
+    /* Subtle camera sway */
+camera.position.x = mouseX * 0.7;
+camera.position.y = 2.6 + mouseY * 0.3;
+camera.lookAt(0, -0.1, 0);
 
     renderer.render(scene, camera);
     requestAnimationFrame(loop);
