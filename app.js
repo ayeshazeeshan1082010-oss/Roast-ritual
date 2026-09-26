@@ -175,13 +175,13 @@ const ROASTS = [
     coffeeHi:'#d4a574', coffeeMid:'#a8734c', coffeeLo:'#6b3d20', shine:'0.45',
     desc:'Preserves origin character — bright, floral, and delicate. Roasted just past first crack.' },
   { id:'medium', name:'Medium', flavors:['Balanced','Sweet','Nutty'],
-    coffeeHi:'#c48b4f', coffeeMid:'#9e6338', coffeeLo:'#6b3d20', shine:'0.35',
+    coffeeHi:'#c48b4f', coffeeMid:'#9e6338', coffeeLo:'#8d5430', shine:'0.35',
     desc:'The balance point. Caramelization develops sweetness while origin notes remain present.' },
   { id:'med-dark', name:'Medium-Dark', flavors:['Chocolate','Toasted','Full'],
-    coffeeHi:'#a86b2a', coffeeMid:'#5a3620', coffeeLo:'#2a1810', shine:'0.25',
+    coffeeHi:'#b8752e', coffeeMid:'#88512a', coffeeLo:'#804928', shine:'0.25',
     desc:'Deeper body, richer sugars. Notes of dark chocolate and toasted nuts emerge.' },
   { id:'dark', name:'Dark', flavors:['Bold','Smoky','Intense'],
-    coffeeHi:'#6b3d20', coffeeMid:'#3a1f10', coffeeLo:'#1a0f08', shine:'0.15',
+    coffeeHi:'#aa6419', coffeeMid:'#7a431b', coffeeLo:'#6d3816', shine:'0.15',
     desc:'Bold and smoky. Oils reach the surface, delivering intensity and a long, resonant finish.' }
 ];
 const rl = document.getElementById('roast-levels');
@@ -224,22 +224,22 @@ const SIGNATURES = [
     notes:'Rich · Bold · Chocolate',
     flavors:['Cocoa','Caramel','Molasses'],
     desc:'Our flagship espresso — pulled hot, dense, and full-bodied. A shot built for the daily ritual.',
-    cupHi:'#a8734c', cupMid:'#4a2c1a', cupLo:'#1a0f08' },
+    cupHi:'#a8734c', cupMid:'#805134', cupLo:'#794d31' },
   { name:'House <em>Latte</em>', eyebrow:'House Favorite',
     notes:'Smooth · Velvet · Nutty',
     flavors:['Steamed Milk','Almond','Brown Sugar'],
     desc:'Silky steamed milk poured over a balanced double shot. The kind of cup you order again tomorrow.',
-    cupHi:'#d4a574', cupMid:'#8b5a3c', cupLo:'#3a1f10' },
+    cupHi:'#d4a574', cupMid:'#86461d', cupLo:'#64341a' },
   { name:'Ethiopian <em>Pour Over</em>', eyebrow:'Single Origin',
     notes:'Floral · Citrus · Bright',
     flavors:['Jasmine','Bergamot','Stone Fruit'],
     desc:'Hand-poured Yirgacheffe. Delicate, tea-like, and luminous. Best enjoyed without milk.',
-    cupHi:'#f0d9b5', cupMid:'#b89870', cupLo:'#6b3d20' },
+    cupHi:'#996732', cupMid:'#74492f', cupLo:'#55321c' },
   { name:'Midnight <em>Mocha</em>', eyebrow:'Dark Roast',
     notes:'Deep · Smoky · Intense',
     flavors:['Dark Chocolate','Espresso','Cream'],
     desc:'Our darkest roast married with single-origin cocoa. Rich, warm, and unapologetically grown-up.',
-    cupHi:'#6b3d20', cupMid:'#2a1810', cupLo:'#0a0503' }
+    cupHi:'#975126', cupMid:'#835c4b', cupLo:'#6b270c' }
 ];
 const sigList = document.getElementById('sig-list');
 let activeSig = 0;
